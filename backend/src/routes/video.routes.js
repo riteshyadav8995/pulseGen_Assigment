@@ -9,6 +9,7 @@ const {
   getVideos,
   getVideo,
   streamVideo,
+  recordView,
   deleteVideo,
   getStats,
 } = require('../controllers/videoController');
@@ -52,6 +53,8 @@ router.post(
 router.get('/', protect, getVideos);
 
 router.get('/stream/:id', protect, streamVideo);
+
+router.post('/:id/view', protect, recordView);
 
 router.get('/:id', protect, getVideo);
 

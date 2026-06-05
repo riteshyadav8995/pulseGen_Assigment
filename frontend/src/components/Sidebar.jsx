@@ -52,7 +52,7 @@ const Sidebar = () => {
             <Zap size={18} className="text-white" fill="white" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-lg leading-none">VideoVault</h1>
+            <h1 className="text-white font-bold text-lg leading-none">PulseGen</h1>
             <p className="text-slate-500 text-xs mt-0.5">Intelligence Platform</p>
           </div>
         </div>

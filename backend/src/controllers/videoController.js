@@ -85,9 +85,6 @@ const getVideo = async (req, res) => {
       return res.status(404).json({ message: 'Video not found' });
     }
 
-    // Increment views
-    await Video.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
-
     res.json({ success: true, video });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -109,6 +106,7 @@ const streamVideo = async (req, res) => {
     if (!fs.existsSync(video.path)) {
       return res.status(404).json({ message: 'Video file missing from disk' });
     }
+
 
     const stat = fs.statSync(video.path);
     const fileSize = stat.size;
@@ -211,11 +209,31 @@ const getStats = async (req, res) => {
   }
 };
 
+// ─── Record View ──────────────────────────────────────────────────────────────
+// POST /api/videos/:id/view
+const recordView = async (req, res) => {
+  try {
+    const query = { _id: req.params.id };
+    if (req.user.role !== 'admin') query.owner = req.user._id;
+
+    const video = await Video.findOne(query);
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    await Video.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadVideo,
   getVideos,
   getVideo,
   streamVideo,
+  recordView,
   deleteVideo,
   getStats,
   setIO,

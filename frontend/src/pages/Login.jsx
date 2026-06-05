@@ -46,7 +46,7 @@ const Login = () => {
               <Zap size={24} className="text-white" fill="white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-            <p className="text-slate-400 text-sm mt-1">Sign in to VideoVault</p>
+            <p className="text-slate-400 text-sm mt-1">Sign in to PulseGen</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">

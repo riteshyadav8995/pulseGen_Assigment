@@ -40,9 +40,13 @@ const VideoPlayer = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
   const videoRef = useRef(null);
+  const hasCountedView = useRef(false);  // prevents double-counting on pause/resume
   const [video, setVideo]     = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
+
+  // Reset view flag when video id changes
+  useEffect(() => { hasCountedView.current = false; }, [id]);
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -58,6 +62,18 @@ const VideoPlayer = () => {
     };
     fetchVideo();
   }, [id]);
+
+  // Called when user actually presses play
+  const handlePlay = async () => {
+    if (hasCountedView.current) return;  // only count once per session
+    hasCountedView.current = true;
+    try {
+      await api.post(`/videos/${id}/view`);
+      setVideo((prev) => prev ? { ...prev, views: (prev.views || 0) + 1 } : prev);
+    } catch {
+      // silently ignore — view count is non-critical
+    }
+  };
 
   const streamUrl = `/api/videos/stream/${id}?token=${token}`;
 
@@ -133,6 +149,7 @@ const VideoPlayer = () => {
                   className="w-full aspect-video"
                   src={streamUrl}
                   preload="metadata"
+                  onPlay={handlePlay}
                 >
                   Your browser does not support the video tag.
                 </video>

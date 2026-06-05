@@ -52,7 +52,7 @@ const Register = () => {
               <Zap size={24} className="text-white" fill="white" />
             </div>
             <h1 className="text-2xl font-bold text-white">Create account</h1>
-            <p className="text-slate-400 text-sm mt-1">Join VideoVault Intelligence Platform</p>
+            <p className="text-slate-400 text-sm mt-1">Join PulseGen Intelligence Platform</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
