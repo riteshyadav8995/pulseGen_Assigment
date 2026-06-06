@@ -75,7 +75,10 @@ const VideoPlayer = () => {
     }
   };
 
-  const streamUrl = `/api/videos/stream/${id}?token=${token}`;
+  // Build absolute stream URL — relative '/api' only works locally via Vite proxy.
+  // In production (Vercel), we must point directly at the Render backend.
+  const BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+  const streamUrl = `${BASE}/videos/stream/${id}?token=${token}`;
 
   if (loading) {
     return (
