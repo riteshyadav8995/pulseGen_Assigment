@@ -24,7 +24,7 @@ const server = http.createServer(app);
 
 // ─── CORS origins ─────────────────────────────────────────────────────────────
 // CLIENT_URL can be a comma-separated list, e.g.:
-//   CLIENT_URL=https://myfrontend.vercel.app,http://localhost:5173
+//   CLIENT_URL=https://pulse-gen-assigment.vercel.app,http://localhost:5173
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
   .map((o) => o.trim());
