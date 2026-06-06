@@ -22,10 +22,29 @@ if (!fs.existsSync(uploadsDir)) {
 const app = express();
 const server = http.createServer(app);
 
+// ─── CORS origins ─────────────────────────────────────────────────────────────
+// CLIENT_URL can be a comma-separated list, e.g.:
+//   CLIENT_URL=https://myfrontend.vercel.app,http://localhost:5173
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim());
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS: origin "${origin}" is not allowed`));
+    }
+  },
+  credentials: true,
+};
+
 // ─── Socket.io ────────────────────────────────────────────────────────────────
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -44,12 +63,7 @@ io.on('connection', (socket) => {
 connectDB();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
